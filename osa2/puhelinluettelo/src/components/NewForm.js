@@ -3,12 +3,12 @@ const NewForm = ({
     newName,
     newNumber,
     handleNewName,
-    handleSubmit,
+    handleNewPerson,
     handleNewNumber,
   }) => {
     return (
       <>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleNewPerson}>
           <div>
             name: <input value={newName} onChange={handleNewName} />
           </div>
