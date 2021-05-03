@@ -1,18 +1,10 @@
 import Person from "./Person";
 
-const PersonRenderLogic = ({ persons, filter, setPersons, setMessage, resetMessage }) => {
+const PersonRenderLogic = ({ persons, filter, handleDelete }) => {
   return filter === "" ? (
     <>
       {persons.map((person) => (
-        <Person
-          key={person.name}
-          person={person}
-          setPersons={setPersons}
-          persons={persons}
-          setMessage={setMessage}
-          resetMessage={resetMessage}
-          
-        />
+        <Person key={person.name} person={person} handleDelete={handleDelete} />
       ))}
     </>
   ) : (
@@ -25,10 +17,7 @@ const PersonRenderLogic = ({ persons, filter, setPersons, setMessage, resetMessa
           <Person
             key={person.name}
             person={person}
-            setPersons={setPersons}
-            persons={persons}
-            setMessage={setMessage}
-            resetMessage={resetMessage}
+            handleDelete={handleDelete}
           />
         ))}
     </>

@@ -1,24 +1,9 @@
-import httpService from "../services/httpService";
-
-const Person = ({ person, setPersons, persons, setMessage, resetMessage }) => {
-  const handleClick = () => {
-    if (window.confirm(`Delete ${person.name}?`)) {
-      httpService.remove(person.id);
-      const newPersons = persons.filter(
-        (personToBeAdded) => personToBeAdded.id !== person.id
-      );
-
-      const newMessage = { message: `Deleted ${person.name}`, error: false };
-      setPersons(newPersons);
-      setMessage(newMessage);
-      resetMessage();
-    }
-  };
+const Person = ({ person, handleDelete }) => {
   return (
     <>
       <p>
         {person.name} {person.number}{" "}
-        <button onClick={handleClick}>delete</button>
+        <button onClick={ () => handleDelete(person)}>delete</button>
       </p>
     </>
   );

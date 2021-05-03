@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import httpService from "./services/httpService";
+import personService from "./services/personService";
 import FilterField from "./components/FilterField";
 import NewForm from "./components/NewForm";
 import PersonRenderLogic from "./components/PersonRenderLogic";
@@ -15,7 +15,7 @@ const App = () => {
   const [message, setMessage] = useState(emptyMessage);
 
   useEffect(() => {
-    const promise = httpService.getAll();
+    const promise = personService.getAll();
     promise.then((database) => {
       setPersons(database);
     });
@@ -40,11 +40,25 @@ const App = () => {
       }
     } else {
       const person = { name: newName, number: newNumber };
-      httpService.create(person).then((personWithId) => {
+      personService.create(person).then((personWithId) => {
         setPersons(persons.concat(personWithId));
       });
 
       personCreated(person);
+    }
+  };
+
+  const handleDelete = (person) => {
+    if (window.confirm(`Delete ${person.name}?`)) {
+      personService.remove(person.id);
+      const newPersons = persons.filter(
+        (personToBeAdded) => personToBeAdded.id !== person.id
+      );
+
+      const newMessage = { message: `Deleted ${person.name}`, error: false };
+      setPersons(newPersons);
+      setMessage(newMessage);
+      resetMessage();
     }
   };
 
@@ -63,7 +77,7 @@ const App = () => {
   const handleNumberUpdate = () => {
     const personToBeUpdated = persons.find((person) => person.name === newName);
     const updatedPerson = { ...personToBeUpdated, number: newNumber };
-    httpService
+    personService
       .update(updatedPerson.id, updatedPerson)
       .then((response) => {
         setPersons(
@@ -129,9 +143,7 @@ const App = () => {
       <PersonRenderLogic
         persons={persons}
         filter={filter}
-        setPersons={setPersons}
-        setMessage={setMessage}
-        resetMessage={resetMessage}
+        handleDelete={handleDelete}
       />
     </div>
   );
