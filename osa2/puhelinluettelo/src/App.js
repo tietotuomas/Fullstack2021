@@ -40,25 +40,52 @@ const App = () => {
       }
     } else {
       const person = { name: newName, number: newNumber };
-      personService.create(person).then((personWithId) => {
-        setPersons(persons.concat(personWithId));
-      });
-
-      personCreated(person);
+      personService
+        .create(person)
+        .then((personWithId) => {
+          setPersons(persons.concat(personWithId));
+          personCreated(person);
+        })
+        .catch((error) => {
+          const newMessage = {
+            message: error.response.data.error,
+            error: true,
+          };
+          setMessage(newMessage);
+          resetMessage();
+        });
     }
   };
 
   const handleDelete = (person) => {
     if (window.confirm(`Delete ${person.name}?`)) {
-      personService.remove(person.id);
-      const newPersons = persons.filter(
-        (personToBeAdded) => personToBeAdded.id !== person.id
-      );
+      personService
+        .remove(person.id)
+        .then((response) => {
+          const newPersons = persons.filter(
+            (personToBeAdded) => personToBeAdded.id !== person.id
+          );
 
-      const newMessage = { message: `Deleted ${person.name}`, error: false };
-      setPersons(newPersons);
-      setMessage(newMessage);
-      resetMessage();
+          const newMessage = {
+            message: `Deleted ${person.name}`,
+            error: false,
+          };
+          setPersons(newPersons);
+          setMessage(newMessage);
+          resetMessage();
+        })
+        .catch((error) => {
+          const newMessage = {
+            message: `Information of ${person.name} has already been removed from the server.`,
+            error: true,
+          };
+          setMessage(newMessage);
+          resetMessage();
+          const newPersons = persons.filter(
+            (personToBeAdded) => personToBeAdded.name !== person.name
+          );
+          setPersons(newPersons);
+        });
     }
   };
 
