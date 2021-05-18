@@ -3,9 +3,9 @@ const logger = require('../utils/logger');
 
 const blogSchema = mongoose.Schema(
   {
-    title: String,
+    title: { type: String, required: true },
     author: String,
-    url: String,
+    url: { type: String, required: true },
     likes: Number,
   },
   { versionKey: false }
@@ -13,7 +13,7 @@ const blogSchema = mongoose.Schema(
 
 blogSchema.set('toJSON', {
   transform: (document, returnedObject) => {
-    logger.info('modifying toJSON - changing id from Object to String');
+    logger.info('modifying toJSON - changing __id from Object to String');
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     logger.info(returnedObject);

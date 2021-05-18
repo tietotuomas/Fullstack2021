@@ -1,3 +1,4 @@
+const { response } = require('express');
 const logger = require('./logger');
 
 const requestLogger = (request, response, next) => {
@@ -16,6 +17,10 @@ const unknownEndpoint = (req, res) => {
 
 const errorHandler = (error, req, res, next) => {
   logger.info('errorHandler middleware activated:', error.message);
+
+  if (error.name === 'ValidationError') {
+    return res.status(400).json({ error: error.message });
+  }
   next();
 };
 

@@ -24,7 +24,7 @@ mongoose
   });
 
 app.use(cors());
-// app.use(express.static('build')) FRONT ENDILLE
+// app.use(express.static('build')) FRONTEND
 app.use(express.json());
 app.use(middleware.requestLogger);
 app.use('/api/blogs', blogsRouter);

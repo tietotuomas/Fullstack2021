@@ -2,42 +2,51 @@ const blogsRouter = require('express').Router();
 const Blog = require('../models/blog');
 const logger = require('../utils/logger');
 
-blogsRouter.get('/', (request, response) => {
+blogsRouter.get('/', async (request, response) => {
   logger.info('Fetching all the resources');
-  Blog.find({}).then((blogs) => {
-    response.status(200).json(blogs);
-  });
+  const blogs = await Blog.find({});
+  response.status(200).json(blogs);
 });
 
-blogsRouter.get('/:id', (request, response, next) => {
+blogsRouter.get('/:id', async (request, response, next) => {
   logger.info('Fetching a single resource');
-  Blog.findById(request.params.id)
-    .then((blog) => {
-      if (blog) {
-        response.status(200).json(blog.toJSON());
-      } else {
-        response.status(404).end();
-      }
-    })
-    .catch((error) => next(error));
+  try {
+    const foundBlog = await Blog.findById(request.params.id);
+
+    if (foundBlog) {
+      response.status(200).json(foundBlog.toJSON());
+    } else {
+      response.status(404).end();
+    }
+  } catch (exception) {
+    next(exception);
+  }
 });
 
-blogsRouter.post('/', (request, response) => {
+blogsRouter.post('/', async (request, response, next) => {
   logger.info('Creating a new resource');
-  const blog = new Blog(request.body); //TOIMIIKO NÄIN VAI PITÄÄKÖ POIMIA BODYSTA ARVOT ERIKSEEN?
-
-  blog.save().then((result) => {
-    response.status(201).json(result);
+  const blog = new Blog({
+    title: request.body.title,
+    author: request.body.author,
+    url: request.body.url,
+    likes: request.body.likes === undefined ? 0 : request.body.likes,
   });
+  try {
+    const savedBlog = await blog.save();
+    response.status(201).json(savedBlog);
+  } catch (exception) {
+    next(exception);
+  }
 });
 
-blogsRouter.delete('/:id', (request, response, next) => {
+blogsRouter.delete('/:id', async (request, response, next) => {
   logger.info('Deleting a resource');
-  Blog.findByIdAndDelete(request.params.id)
-    .then(() => {
-      response.status(204).end();
-    })
-    .catch((error) => next(error));
+  try {
+    await Blog.findByIdAndDelete(request.params.id);
+    response.status(204).end();
+  } catch (exception) {
+    next(exception);
+  }
 });
 
 module.exports = blogsRouter;
