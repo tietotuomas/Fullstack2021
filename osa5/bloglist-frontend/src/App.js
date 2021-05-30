@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import OldBlog from "./components/OldBlog";
+import Blog from "./components/Blog";
 import NewBlog from "./components/NewBlog";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
@@ -140,7 +140,7 @@ const App = () => {
       {blogs
         .sort((a, b) => (a.likes > b.likes ? -1 : 1))
         .map((blog) => (
-          <OldBlog
+          <Blog
             key={blog.id}
             blog={blog}
             addLike={handleNewLike}

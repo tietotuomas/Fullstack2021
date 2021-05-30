@@ -8,7 +8,6 @@ const NewBlog = ({ addNewBlog }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const newBlog = { author: author, title: title, url: url };
-    console.log(newBlog);
     addNewBlog(newBlog);
     setAuthor("");
     setTitle("");
@@ -19,21 +18,21 @@ const NewBlog = ({ addNewBlog }) => {
       <h2>Create new</h2>
       <form onSubmit={handleSubmit}>
         Title
-        <input
+        <input id={"title"}
           type="text"
           value={title}
           onChange={({ target }) => setTitle(target.value)}
         ></input>
         <br></br>
         Author
-        <input
+        <input id={"author"}
           type="text"
           value={author}
           onChange={(event) => setAuthor(event.target.value)}
         ></input>
         <br></br>
         URL
-        <input
+        <input id={"url"}
           type="text"
           value={url}
           onChange={(event) => setUrl(event.target.value)}

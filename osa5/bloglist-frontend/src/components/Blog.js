@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-const OldBlog = ({ blog, addLike, user, handleRemove }) => {
+const Blog = ({ blog, addLike, user, handleRemove }) => {
   const [showAll, setShowAll] = useState(false);
   const blogStyle = {
     paddingTop: 10,
@@ -76,11 +76,11 @@ const OldBlog = ({ blog, addLike, user, handleRemove }) => {
   );
 };
 
-OldBlog.propTypes = {
+Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   addLike: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   handleRemove: PropTypes.func.isRequired,
 };
 
-export default OldBlog;
+export default Blog;
