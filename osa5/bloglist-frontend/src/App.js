@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import OldBlog from "./components/OldBlog";
 import NewBlog from "./components/NewBlog";
 import Notification from "./components/Notification";
+import Togglable from "./components/Togglable";
 import Login from "./components/Login";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [author, setAuthor] = useState("");
-  const [title, setTitle] = useState("");
-  const [url, setUrl] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState({ message: null, error: false });
+  const newBlogRef = useRef();
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -54,30 +53,62 @@ const App = () => {
     setUser(null);
   };
 
-  const handleNewBlog = async (event) => {
-    event.preventDefault();
-    const newBlog = { author: author, title: title, url: url };
-    console.log(newBlog);
-
+  const handleNewBlog = async (newBlog) => {
     try {
       const returnedBlog = await blogService.create(newBlog, user);
       setBlogs(blogs.concat(returnedBlog));
+      newBlogRef.current.toggleVisibility();
       setMessage({
-        message: `A new blog create: ${title} by ${author}`,
+        message: `A new blog created: ${newBlog.title} by ${newBlog.author}`,
         error: false,
       });
       setTimeout(() => {
         setMessage({ message: null, error: false });
       }, 3333);
-      setAuthor("");
-      setTitle("");
-      setUrl("");
     } catch (error) {
       console.log(error);
       setMessage({ message: "Creating a new blog failed.", error: true });
       setTimeout(() => {
         setMessage({ message: null, error: false });
       }, 3333);
+    }
+  };
+
+  const handleNewLike = async (blog) => {
+    const updatedBlog = { ...blog, likes: blog.likes + 1 };
+    console.log(updatedBlog);
+    try {
+      const returnedBlog = await blogService.update(updatedBlog);
+      console.log(returnedBlog);
+      setBlogs(
+        blogs.map((blog) => (blog.id !== returnedBlog.id ? blog : updatedBlog))
+      );
+    } catch (error) {
+      setMessage({ message: "Adding a like failed.", error: true });
+      setTimeout(() => {
+        setMessage({ message: null, error: false });
+      }, 3333);
+    }
+  };
+
+  const handleRemove = async (blog) => {
+    if (window.confirm(`Remove ${blog.title}?`)) {
+      try {
+        await blogService.remove(blog, user);
+        setBlogs(blogs.filter((b) => b.id !== blog.id));
+        setMessage({
+          message: "Blog was removed successfully",
+          error: false,
+        });
+        setTimeout(() => {
+          setMessage({ message: null, error: false });
+        }, 3333);
+      } catch (error) {
+        setMessage({ message: "Removing a blog failed.", error: true });
+        setTimeout(() => {
+          setMessage({ message: null, error: false });
+        }, 3333);
+      }
     }
   };
 
@@ -103,23 +134,23 @@ const App = () => {
     <div>
       <h2>Blogs</h2>
       <Notification message={message.message} error={message.error} />
-
       <p>
         {user.name} logged in <button onClick={handleLogout}>logout</button>
       </p>
-
-      {blogs.map((blog) => (
-        <OldBlog key={blog.id} blog={blog} />
-      ))}
-      <NewBlog
-        handleSubmit={handleNewBlog}
-        author={author}
-        setAuthor={setAuthor}
-        title={title}
-        setTitle={setTitle}
-        url={url}
-        setUrl={setUrl}
-      />
+      {blogs
+        .sort((a, b) => (a.likes > b.likes ? -1 : 1))
+        .map((blog) => (
+          <OldBlog
+            key={blog.id}
+            blog={blog}
+            addLike={handleNewLike}
+            user={user}
+            handleRemove={handleRemove}
+          />
+        ))}
+      <Togglable buttonLabel="create" ref={newBlogRef}>
+        <NewBlog addNewBlog={handleNewBlog} />
+      </Togglable>
     </div>
   );
 };

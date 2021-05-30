@@ -14,8 +14,24 @@ const create = async (blog, user) => {
   console.log(config);
 
   const response = await axios.post(baseUrl, blog, config);
-  console.log(response);
   return response.data;
 };
 
-export default { getAll, create };
+const update = async (updatedBlog) => {
+  const response = await axios.put(`${baseUrl}/${updatedBlog.id}`, updatedBlog);
+  return response.data;
+};
+
+const remove = async (blog, user) => {
+  const token = `bearer ${user.token}`;
+  const config = {
+    headers: { Authorization: token },
+  };
+  console.log(config);
+
+  const response = await axios.delete(`${baseUrl}/${blog.id}`, config);
+  console.log("RESPONSE", response);
+  return response;
+};
+
+export default { getAll, create, update, remove };
