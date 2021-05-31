@@ -31,18 +31,19 @@ const Blog = ({ blog, addLike, user, handleRemove }) => {
     return (
       <div style={blogStyle}>
         <div>
-          {blog.title} {blog.author}
-          <button onClick={toggleView}> hide</button>
-          <br></br>
-          {blog.url}
-          <br></br>
-          {blog.likes}
-          <button onClick={handleLikeClick}> like</button>
-          <br></br>
-          {blog.user.name}
-          <br></br>
-          <button onClick={handleRemoveClick}>remove</button>
-          <br></br>
+          <li>
+            {blog.title} {blog.author}
+            <button onClick={toggleView}> hide</button>
+          </li>
+          <li>{blog.url}</li>
+          <li>
+            {blog.likes}
+            <button onClick={handleLikeClick}> like</button>
+          </li>
+          <li>{blog.user.name}</li>
+          <li>
+            <button onClick={handleRemoveClick}>remove</button>
+          </li>
         </div>
       </div>
     );
@@ -52,16 +53,16 @@ const Blog = ({ blog, addLike, user, handleRemove }) => {
     return (
       <div style={blogStyle}>
         <div>
-          {blog.title} {blog.author}
-          <button onClick={toggleView}> hide</button>
-          <br></br>
-          {blog.url}
-          <br></br>
-          {blog.likes}
-          <button onClick={handleLikeClick}> like</button>
-          <br></br>
-          {blog.user.name}
-          <br></br>
+          <li>
+            {blog.title} {blog.author}
+            <button onClick={toggleView}> hide</button>
+          </li>
+          <li>{blog.url}</li>
+          <li>
+            {blog.likes}
+            <button onClick={handleLikeClick}> like</button>
+          </li>
+          <li>{blog.user.name}</li>
         </div>
       </div>
     );
@@ -69,8 +70,10 @@ const Blog = ({ blog, addLike, user, handleRemove }) => {
   return (
     <div style={blogStyle}>
       <div>
-        {blog.title} {blog.author}
-        <button onClick={toggleView}>view</button>
+        <li>
+          {blog.title} {blog.author}
+          <button onClick={toggleView}>view</button>
+        </li>
       </div>
     </div>
   );

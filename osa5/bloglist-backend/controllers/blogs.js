@@ -29,7 +29,7 @@ blogsRouter.post('/', userExtractor, async (request, response) => {
 
   // if (!blog.url || !blog.title) {
   //   return response.status(400).send({ error: 'title or url missing ' });
-  // } authentication in Schema?
+  // } authentication in Schema
 
   const blog = new Blog({
     title: request.body.title,

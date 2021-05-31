@@ -137,17 +137,19 @@ const App = () => {
       <p>
         {user.name} logged in <button onClick={handleLogout}>logout</button>
       </p>
-      {blogs
-        .sort((a, b) => (a.likes > b.likes ? -1 : 1))
-        .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            addLike={handleNewLike}
-            user={user}
-            handleRemove={handleRemove}
-          />
-        ))}
+      <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
+        {blogs
+          .sort((a, b) => (a.likes > b.likes ? -1 : 1))
+          .map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              addLike={handleNewLike}
+              user={user}
+              handleRemove={handleRemove}
+            />
+          ))}
+      </ul>
       <Togglable buttonLabel="create" ref={newBlogRef}>
         <NewBlog addNewBlog={handleNewBlog} />
       </Togglable>
