@@ -104,7 +104,7 @@ describe("Blog app", function () {
       });
     });
 
-    it.only("Blogs are sorted by likes (most liked first)", function () {
+    it("Blogs are sorted by likes (most liked first)", function () {
       cy.get("ul li:first").should("contain", "Facebook");
       cy.get("ul li:last").should("contain", "Alan Turing");
 
